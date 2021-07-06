@@ -55,5 +55,5 @@ def create_drink(user_id: str, drink_grams: int):
 
 @app.get('/drinks/{user_id}')
 def read_drinks(user_id: str):
-    bac = sum([drink.current_bac() for drink in drinks])
+    bac = sum([drink.current_bac for drink in drinks])
     return {'bac': bac}

@@ -1,3 +1,4 @@
+import datetime as dt
 from dataclasses import dataclass
 
 from .user import UserSex
@@ -22,6 +23,7 @@ class Drink:
         updated_bac = initial_bac - (0.015 * decay_hours)
         return updated_bac
 
+    @property
     def current_bac(self):
         '''
         Get the current BAC effect of this drink.
