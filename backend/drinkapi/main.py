@@ -15,19 +15,20 @@ drinks: Mapping[str, List[Drink]] = defaultdict(list)
 used_usernames = set()
 
 
-@app.get("/users/{user_id}")
+@app.get("/user/{user_id}")
 def read_user(user_id: str):
     if user_id in users:
-        user = users[user_id]
-        return user
+        user_dict = users[user_id].dict().copy()
+        user_dict['user_id'] = user_id
+        return user_dict
     else:
         if user_id not in users:
             raise HTTPException(status_code=404, detail='User not found')
 
 
-@app.post('/users/', status_code=201)
+@app.post('/user/', status_code=201)
 def create_user(user: User):
-    user_dict = user.dict()
+    user_dict = user.dict().copy()
     username = user.username
     if username in used_usernames:
         raise HTTPException(
@@ -37,10 +38,11 @@ def create_user(user: User):
     user_id = str(uuid4())
     users[user_id] = user
     used_usernames.add(username)
-    return user_dict, user_id
+    user_dict['user_id'] = user_id
+    return user_dict
 
 
-@app.get('/drinks/{user_id}')
+@app.get('/drink/{user_id}')
 def read_drinks(user_id: str):
     if user_id not in users:
         raise HTTPException(status_code=404, detail='User not found')
@@ -49,7 +51,7 @@ def read_drinks(user_id: str):
     return {'bac': bac}
 
 
-@app.post('/drinks/', status_code=201)
+@app.post('/drink/', status_code=201)
 def create_drink(user_id: str, drink_grams: int):
     if user_id not in users:
         raise HTTPException(status_code=404, detail='User not found')
