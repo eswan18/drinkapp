@@ -7,10 +7,10 @@ SETUP_FILES = setup.cfg pyproject.toml
 all: lint typecheck test
 
 lint: $(SRC_FILES)
-	@flake8 $(SRC_DIR)
+	flake8 $(SRC_DIR)
 
 typecheck: $(SRC_FILES)
-	@mypy $(SRC_DIR)
+	mypy $(SRC_DIR)
 
 test: $(SRC_FILES) $(TEST_FILES)
-	@pytest
+	pytest
