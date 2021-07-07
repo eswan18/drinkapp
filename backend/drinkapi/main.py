@@ -25,7 +25,7 @@ def read_user(user_id: str):
             raise HTTPException(status_code=404, detail='User not found')
 
 
-@app.post('/users/')
+@app.post('/users/', status_code=201)
 def create_user(user: User):
     user_dict = user.dict()
     username = user.username
@@ -49,7 +49,7 @@ def read_drinks(user_id: str):
     return {'bac': bac}
 
 
-@app.post('/drinks/')
+@app.post('/drinks/', status_code=201)
 def create_drink(user_id: str, drink_grams: int):
     if user_id not in users:
         raise HTTPException(status_code=404, detail='User not found')
