@@ -54,11 +54,11 @@ def read_drinks(user_id: str):
 def create_drink(user_id: str, drink_grams: int):
     if user_id not in users:
         raise HTTPException(status_code=404, detail='User not found')
-    user = users[user_id].dict()
+    user = users[user_id]
     user_wt_grams = user.wt_grams
     user_sex = user.sex
     drink = Drink(
-        drinks_grams=drink_grams,
+        drink_grams=drink_grams,
         user_wt_grams=user_wt_grams,
         user_sex=user_sex,
         time=dt.datetime.now()
