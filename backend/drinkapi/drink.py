@@ -8,7 +8,7 @@ from .user import UserSex
 class Drink:
     drink_grams: int
     user_wt_grams: int
-    user_sex: UserSex 
+    user_sex: UserSex
     time: dt.datetime
 
     @property
@@ -31,4 +31,3 @@ class Drink:
         Uses the Widmark formula.
         '''
         return self.decayed_bac(decay_hrs=self.hours_since)
-

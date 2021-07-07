@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Mapping
+from typing import List, Dict, Mapping
 import datetime as dt
 from uuid import uuid4
 from collections import defaultdict
@@ -31,7 +31,10 @@ def create_user(user: User):
     user_dict = user.dict()
     username = user.username
     if username in used_usernames:
-        raise HTTPException(status_code=409, detail='Requested username already exists')
+        raise HTTPException(
+            status_code=409,
+            detail='Requested username already exists'
+        )
     user_id = str(uuid4())
     users[user_id] = user
     used_usernames.add(username)
@@ -42,7 +45,8 @@ def create_user(user: User):
 def read_drinks(user_id: str):
     if user_id not in users:
         raise HTTPException(status_code=404, detail='User not found')
-    bac = sum([drink.current_bac for drink in drinks])
+    user_drinks = drinks[user_id]
+    bac = sum([drink.current_bac for drink in user_drinks])
     return {'bac': bac}
 
 
@@ -60,6 +64,3 @@ def create_drink(user_id: str, drink_grams: int):
         time=dt.datetime.now()
     )
     drinks[user_id].append(drink)
-
-
-

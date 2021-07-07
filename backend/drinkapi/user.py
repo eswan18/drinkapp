@@ -12,4 +12,3 @@ class User(BaseModel):
     username: str
     wt_grams: int
     sex: UserSex
-
