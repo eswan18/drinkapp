@@ -1,11 +1,11 @@
 import datetime as dt
-from dataclasses import dataclass
+
+from pydantic import BaseModel
 
 from .user import UserSex
 
 
-@dataclass
-class Drink:
+class Drink(BaseModel):
     drink_grams: int
     user_wt_grams: int
     user_sex: UserSex
@@ -30,4 +30,4 @@ class Drink:
 
         Uses the Widmark formula.
         '''
-        return self.decayed_bac(decay_hrs=self.hours_since)
+        return self.decayed_bac(elapsed_hrs=self.hours_since)
