@@ -5,8 +5,7 @@ from collections import defaultdict
 
 from fastapi import FastAPI, HTTPException
 
-from .user import User
-from .drink import Drink
+from .models import User, Drink
 
 
 app = FastAPI()

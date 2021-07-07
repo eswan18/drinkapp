@@ -3,8 +3,7 @@ from typing import Dict
 
 import pytest
 
-from drinkapi.drink import Drink
-from drinkapi.user import UserSex
+from drinkapi.models import Drink, UserSex
 
 drinks_and_final_bacs = [
     (
