@@ -21,7 +21,9 @@ def test_workflow():
     response = client.post('/user/', json=user_json)
     assert response.status_code == 201
     post_resp_json = response.json()
-    user_id = post_resp_json['user_id']
+    user_id = post_resp_json['id']
+    # The BAC of a new user should be 0
+    assert post_resp_json['bac'] == 0
 
     # Check that we can look up the user by ID.
     response = client.get(f'/user/{user_id}')
@@ -37,8 +39,8 @@ def test_workflow():
         response = client.post('/drink/', params=drink_json)
         assert response.status_code == 201
 
-    # Make sure the user's current BAC is what we'd expect, via GET /drinks/
-    response = client.get(f'/drink/{user_id}')
+    # Make sure the user's current BAC is what we'd expect, via GET /user/
+    response = client.get(f'/user/{user_id}')
     assert response.status_code == 200
     bac = response.json()['bac']
     assert near_equal(bac, 0.071667)
