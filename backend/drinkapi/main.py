@@ -48,13 +48,12 @@ def create_user(user: UserIn):
     return user_in_db
 
 
-@app.get('/drink/{user_id}')
+@app.get('/drink/{user_id}', response_model=List[Drink])
 def read_drinks(user_id: str):
     if user_id not in users:
         raise HTTPException(status_code=404, detail='User not found')
     user_drinks = drinks[user_id]
-    bac = sum([drink.current_bac for drink in user_drinks])
-    return {'bac': bac}
+    return user_drinks
 
 
 @app.post('/drink/', status_code=201)
