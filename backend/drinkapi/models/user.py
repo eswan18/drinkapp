@@ -8,7 +8,22 @@ class UserSex(str, Enum):
     male = "male"
 
 
-class User(BaseModel):
+class UserIn(BaseModel):
     username: str
     wt_grams: int
     sex: UserSex
+
+
+class UserInDB(BaseModel):
+    username: str
+    wt_grams: int
+    sex: UserSex
+    id: str
+
+
+class UserOut(BaseModel):
+    username: str
+    wt_grams: int
+    sex: UserSex
+    id: str
+    bac: float = 0

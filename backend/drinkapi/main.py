@@ -5,41 +5,47 @@ from collections import defaultdict
 
 from fastapi import FastAPI, HTTPException
 
-from .models import User, Drink
+from .models import UserIn, UserInDB, UserOut, Drink
 
 
 app = FastAPI()
 
-users: Dict[str, User] = {}
+# Global variables that should eventually be tables in some kind of database.
+users: Dict[str, UserInDB] = {}
 drinks: Mapping[str, List[Drink]] = defaultdict(list)
 used_usernames = set()
 
 
-@app.get("/user/{user_id}")
+def get_user_bac(user_id: str) -> float:
+    user_drinks = drinks[user_id]
+    user = users[user_id]
+    bac = sum([drink.current_bac for drink in drinks[user_id]])
+    return bac
+
+
+@app.get("/user/{user_id}", response_model=UserOut)
 def read_user(user_id: str):
     if user_id in users:
-        user_dict = users[user_id].dict().copy()
-        user_dict['user_id'] = user_id
-        return user_dict
+        user_in_db = users[user_id]
+        bac = get_user_bac(user_id=user_id)
+        user_out = UserOut(**user_in_db.dict(), bac=bac)
+        return user_out
     else:
-        if user_id not in users:
-            raise HTTPException(status_code=404, detail='User not found')
+        raise HTTPException(status_code=404, detail='User not found')
 
 
-@app.post('/user/', status_code=201)
-def create_user(user: User):
-    user_dict = user.dict().copy()
-    username = user.username
-    if username in used_usernames:
+@app.post('/user/', status_code=201, response_model=UserOut)
+def create_user(user: UserIn):
+    if user.username in used_usernames:
         raise HTTPException(
             status_code=409,
             detail='Requested username already exists'
         )
     user_id = str(uuid4())
-    users[user_id] = user
-    used_usernames.add(username)
-    user_dict['user_id'] = user_id
-    return user_dict
+    user_in_db = UserInDB(**user.dict(), id=user_id)
+    users[user_id] = user_in_db
+    used_usernames.add(user.username)
+    return user_in_db
 
 
 @app.get('/drink/{user_id}')
