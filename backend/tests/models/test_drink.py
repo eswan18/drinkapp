@@ -1,5 +1,4 @@
 import datetime as dt
-from typing import Dict
 
 import pytest
 
@@ -18,18 +17,20 @@ drinks_and_final_bacs = [
 ]
 
 
-def near_equal(float_a, float_b):
+def near_equal(float_a: float, float_b: float) -> bool:
     '''
     Compare floats for near-equality.
     '''
     X = 0.0001
     return (float_a - X) < float_b < (float_a + X)
 
+
 @pytest.mark.parametrize('drink', [drink for (drink, bac) in drinks_and_final_bacs])
-def test_hours_since(drink):
+def test_hours_since(drink: Drink):
     hours_since = (dt.datetime.now() - drink.time) / dt.timedelta(hours=1)
     assert near_equal(drink.hours_since, hours_since)
 
+
 @pytest.mark.parametrize('drink,final_bac', drinks_and_final_bacs)
-def test_decayed_bac(drink, final_bac):
+def test_decayed_bac(drink: Drink, final_bac: float):
     assert near_equal(drink.current_bac, final_bac)

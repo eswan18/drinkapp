@@ -17,14 +17,12 @@ used_usernames = set()
 
 
 def get_user_bac(user_id: str) -> float:
-    user_drinks = drinks[user_id]
-    user = users[user_id]
     bac = sum([drink.current_bac for drink in drinks[user_id]])
     return bac
 
 
 @app.get("/user/{user_id}", response_model=UserOut)
-def read_user(user_id: str):
+def read_user(user_id: str) -> UserOut:
     if user_id in users:
         user_in_db = users[user_id]
         bac = get_user_bac(user_id=user_id)
@@ -35,7 +33,7 @@ def read_user(user_id: str):
 
 
 @app.post('/user/', status_code=201, response_model=UserOut)
-def create_user(user: UserIn):
+def create_user(user: UserIn) -> UserInDB:
     if user.username in used_usernames:
         raise HTTPException(
             status_code=409,
@@ -49,7 +47,7 @@ def create_user(user: UserIn):
 
 
 @app.get('/drink/{user_id}', response_model=List[Drink])
-def read_drinks(user_id: str):
+def read_drinks(user_id: str) -> List[Drink]:
     if user_id not in users:
         raise HTTPException(status_code=404, detail='User not found')
     user_drinks = drinks[user_id]
