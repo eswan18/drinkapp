@@ -4,11 +4,23 @@ from uuid import uuid4
 from collections import defaultdict
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from .models import UserIn, UserInDB, UserOut, Drink
 
+ORIGINS = [
+    "http://localhost",
+    "http://localhost:8080",
+]
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Global variables that should eventually be tables in some kind of database.
 users: Dict[str, UserInDB] = {}
