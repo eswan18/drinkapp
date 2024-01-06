@@ -1,16 +1,16 @@
-use axum::Router;
+use axum::{Router, routing::{get, post}};
+use tower_http::validate_request::ValidateRequestHeaderLayer;
+use tokio::net::TcpListener;
 
-mod routes;
 mod handlers;
 mod models;
 
 #[tokio::main]
 async fn main() {
     let app = Router::new()
-        .merge(routes::app_routes());
-
-    axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+        .route("/hello", get(handlers::hello::get_hello))
+        .route("/drink", post(handlers::drink::save_drink))
+        .layer(ValidateRequestHeaderLayer::bearer("abc"));
+    let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
