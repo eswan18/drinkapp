@@ -4,6 +4,7 @@ use tokio::net::TcpListener;
 
 mod handlers;
 mod models;
+mod app_result;
 
 #[tokio::main]
 async fn main() {
