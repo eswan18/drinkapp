@@ -4,6 +4,6 @@ use chrono::{DateTime, Utc};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Drink {
-    timestamp: DateTime<Utc>,
-    user_id: Uuid,
+    pub timestamp: DateTime<Utc>,
+    pub user_id: Uuid,
 }

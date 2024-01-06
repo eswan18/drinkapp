@@ -1,6 +1,7 @@
 use axum::Router;
 use tower_http::validate_request::ValidateRequestHeaderLayer;
 use tokio::net::TcpListener;
+use dotenvy::dotenv;
 pub use self::error::{Error, AppResult};
 
 mod models;
@@ -9,6 +10,9 @@ mod web;
 
 #[tokio::main]
 async fn main() {
+    // Load .env file
+    dotenv().expect(".env file not found");
+
     let app = Router::new()
         .merge(web::routes_drink::routes())
         .merge(web::routes_hello::routes())

@@ -1,7 +1,7 @@
 use axum::{Router, debug_handler, routing::get};
 
 pub fn routes() -> Router {
-    Router::new().route("/drink", get(get_hello))
+    Router::new().route("/hello", get(get_hello))
 }
 
 #[debug_handler]
