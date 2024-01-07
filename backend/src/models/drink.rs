@@ -1,9 +1,9 @@
 use uuid::Uuid;
 use serde_derive::{Deserialize, Serialize};
-use chrono::{DateTime, Utc};
+use chrono::NaiveDateTime;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Drink {
-    pub timestamp: DateTime<Utc>,
+    pub timestamp: NaiveDateTime,
     pub user_id: Uuid,
 }
