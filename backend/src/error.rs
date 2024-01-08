@@ -5,7 +5,7 @@ use http::StatusCode;
 
 pub enum Error {
     LoginFailed,
-    DataUpdateFailed
+    DataUpdateFailed,
 }
 
 pub type AppResult<T> = core::result::Result<T, Error>;
@@ -14,18 +14,10 @@ impl IntoResponse for Error {
     fn into_response(self) -> Response {
         match self {
             Error::LoginFailed => {
-                (
-                    StatusCode::UNAUTHORIZED,
-                    "Invalid username or password",
-                )
-                    .into_response()
-            },
+                (StatusCode::UNAUTHORIZED, "Invalid username or password").into_response()
+            }
             Error::DataUpdateFailed => {
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    "Unable to update data",
-                )
-                    .into_response()
+                (StatusCode::INTERNAL_SERVER_ERROR, "Unable to update data").into_response()
             }
         }
     }

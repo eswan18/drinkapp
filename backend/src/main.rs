@@ -1,20 +1,19 @@
+pub use self::error::{AppResult, Error};
+use axum::Router;
+use dotenvy::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{Pool, Postgres};
-use axum::Router;
-use tower_http::validate_request::ValidateRequestHeaderLayer;
 use tokio::net::TcpListener;
-use dotenvy::dotenv;
-pub use self::error::{Error, AppResult};
+use tower_http::validate_request::ValidateRequestHeaderLayer;
 
-mod models;
 mod error;
+mod models;
 mod web;
 
 #[derive(Clone)]
 struct AppState {
     pub pool: sqlx::PgPool,
 }
-
 
 #[tokio::main]
 async fn main() {
@@ -25,7 +24,9 @@ async fn main() {
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
     let pool: Pool<Postgres> = PgPoolOptions::new()
         .max_connections(5)
-        .connect(&database_url).await.unwrap();
+        .connect(&database_url)
+        .await
+        .unwrap();
 
     let state = AppState { pool };
     let app = Router::new()
