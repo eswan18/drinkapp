@@ -3,8 +3,6 @@ use axum::routing::{get, post};
 use crate::models::Drink;
 use crate::{AppResult, AppState, Error};
 use serde_json::{json, Value};
-use chrono::Utc;
-use uuid::Uuid;
 use sqlx::postgres::PgQueryResult;
 
 
@@ -31,16 +29,10 @@ async fn save_drink(State(state): State<AppState>, Json(payload): Json<Drink>) -
 }
 
 #[debug_handler]
-async fn get_drinks(State(state): State<AppState>) -> AppResult<Json<Value>> {
-    let drinks = sqlx::query_as!(Drink, "SELECT user_id, timestamp FROM user_drinks").fetch_all(&state.pool).await.unwrap();
-    let drink1 = Drink {
-        timestamp: Utc::now().naive_utc(),
-        user_id: Uuid::new_v4(),
-    };
-    let drink2 = Drink {
-        timestamp: Utc::now().naive_utc(),
-        user_id: Uuid::new_v4(),
-    };
-    let body = Json(json!(drinks));
-    Ok(body)
+async fn get_drinks(State(state): State<AppState>) -> AppResult<Json<Vec<Drink>>> {
+    let result: sqlx::Result<Vec<Drink>> = sqlx::query_as!(Drink, "SELECT user_id, timestamp FROM user_drinks").fetch_all(&state.pool).await;
+    return match result {
+        Err(_) => Err(Error::DataUpdateFailed),
+        Ok(drinks) => Ok(Json(drinks)),
+    }
 }
